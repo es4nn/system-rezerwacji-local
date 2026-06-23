@@ -1,5 +1,32 @@
 # Hotel Lux - system rezerwacji hotelowej
 
+## Wersja produkcyjna
+
+Projekt posiada również działającą wersję produkcyjną dostępną online:
+
+Strona frontendowa: https://hotel-lux.pl
+Backend/API: https://api.hotel-lux.pl
+
+Wersja produkcyjna pozwala sprawdzić działanie aplikacji w realnym środowisku hostingowym.
+Działa tam publiczna strona hotelu, lista pokoi, rezerwacje, formularz kontaktowy, newsletter, logowanie użytkownika, panel użytkownika oraz komunikacja frontendu Angular z backendem Laravel API.
+
+W wersji produkcyjnej formularze obsługują również wiadomości e-mail:
+
+recepcja otrzymuje wiadomości administracyjne,
+klient otrzymuje potwierdzenie po wysłaniu formularza,
+osoba zapisująca się do newslettera otrzymuje wiadomość powitalną.
+
+Strona została także zoptymalizowana pod urządzenia mobilne i desktopowe.
+Raport Google PageSpeed Insights wskazuje bardzo dobre wyniki wydajności, dostępności, dobrych praktyk i SEO.
+
+Szczegółowy opis wersji produkcyjnej znajduje się w pliku:
+
+docs/WERSJA_PRODUKCYJNA.md
+
+Ze względów bezpieczeństwa repozytorium nie zawiera danych dostępowych do hostingu, produkcyjnej bazy danych, SMTP, panelu administratora ani produkcyjnego pliku .env.
+
+## Wersja lokalna
+
 Aplikacja internetowa wspierajaca obsluge rezerwacji hotelowych. Projekt sklada sie z:
 
 - `hotel-frontend` - frontend Angular,
