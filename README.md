@@ -4,8 +4,10 @@ Aplikacja internetowa wspierajaca obsluge rezerwacji hotelowych. Projekt sklada 
 
 - `hotel-frontend` - frontend Angular,
 - `hotel-backend` - backend Laravel API,
-- MySQL - lokalna baza danych.
-
+- MySQL - lokalna baza danych (Przed uruchomieniem projektu należy włączyć lokalne środowisko serwerowe. Jeżeli korzystasz z XAMPP, uruchom w panelu XAMPP: - Apache - MySQL i utwórz bazę danych:
+```bash
+CREATE DATABASE hotel_lux CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+```
 Projekt jest przygotowany jako wersja repozytoryjna do uruchomienia lokalnego.
 
 ## Szybki start
