@@ -1,6 +1,6 @@
 # Wersja produkcyjna projektu
 
-Projekt **Hotel Lux — system rezerwacji hotelowej** został wdrożony również w wersji produkcyjnej i jest dostępny online.
+Projekt **Hotel Lux - system rezerwacji hotelowej** został wdrożony również w wersji produkcyjnej i jest dostępny online.
 
 Aplikacja działa jako pełny system webowy oparty o osobny frontend w Angularze oraz backend API w Laravelu. Wersja produkcyjna pozwala sprawdzić działanie projektu w realnym środowisku hostingowym, z prawdziwą domeną, zewnętrznym API, produkcyjną bazą danych oraz obsługą wiadomości e-mail.
 
