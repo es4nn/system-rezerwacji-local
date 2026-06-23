@@ -12,7 +12,7 @@ Aplikacja działa jako pełny system webowy oparty o osobny frontend w Angularze
 
 ## Opis działania wersji produkcyjnej
 
-Wersja produkcyjna umożliwia przejście pełnego procesu rezerwacji hotelowej — od przeglądania oferty pokoi, przez wybór terminu, aż po zapis rezerwacji w bazie danych.
+Wersja produkcyjna umożliwia przejście pełnego procesu rezerwacji hotelowej - od przeglądania oferty pokoi, przez wybór terminu, aż po zapis rezerwacji w bazie danych.
 
 Użytkownik może:
 
@@ -96,9 +96,9 @@ Panel administratora obejmuje między innymi:
 * zmianę liczby osób,
 * upload zdjęć,
 * usuwanie pokoi,
-* podgląd i obsługę rezerwacji, jeżeli dana funkcja jest dostępna w aktualnej wersji aplikacji.
+* podgląd i obsługę rezerwacji.
 
-Dostęp do panelu administratora jest zabezpieczony i nie jest publiczny.
+Dostęp do panelu administratora jest zabezpieczony i nie jest publiczny. W celu przetestowania panelu administratora zachęcamy do skorzystania z lokalnej wersji.
 
 ## Responsywność i optymalizacja
 
