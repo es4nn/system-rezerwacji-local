@@ -6,7 +6,7 @@ Aplikacja internetowa wspierajaca obsluge rezerwacji hotelowych. Projekt sklada 
 - `hotel-backend` - backend Laravel API,
 - MySQL - lokalna baza danych.
 
-Projekt jest przygotowany jako wersja repozytoryjna do uruchomienia lokalnego przez prowadzacego.
+Projekt jest przygotowany jako wersja repozytoryjna do uruchomienia lokalnego.
 
 ## Szybki start
 
