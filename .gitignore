@@ -1,0 +1,15 @@
+node_modules/
+vendor/
+.env
+.env.*
+!.env.example
+storage/logs/
+**/storage/logs/
+bootstrap/cache/*.php
+**/bootstrap/cache/*.php
+*.log
+dist/
+.angular/
+.phpunit.result.cache
+.DS_Store
+Thumbs.db

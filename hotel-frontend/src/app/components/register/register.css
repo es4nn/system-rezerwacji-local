@@ -1,0 +1,26 @@
+.register-shell {
+  padding-top: 7rem;
+  padding-bottom: 4rem;
+}
+
+.register-card {
+  border-radius: 8px;
+}
+
+.register-kicker {
+  color: #0dcaf0;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.14rem;
+  text-transform: uppercase;
+}
+
+.form-control {
+  min-height: 48px;
+  border-radius: 8px;
+}
+
+.form-control:focus {
+  border-color: #0dcaf0;
+  box-shadow: 0 0 0 0.2rem rgba(13, 202, 240, 0.16);
+}

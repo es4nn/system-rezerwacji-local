@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" role="img" aria-label="Apartament z widokiem na jezioro">
+  <rect width="1200" height="800" fill="#e6eef5"/>
+  <rect x="85" y="105" width="1030" height="590" rx="26" fill="#fbfcfb"/>
+  <rect x="710" y="155" width="310" height="370" rx="14" fill="#8bb7c9"/>
+  <path d="M720 420 C800 360 910 475 1020 405 L1020 525 L720 525 Z" fill="#497f95"/>
+  <rect x="150" y="365" width="500" height="155" rx="22" fill="#36495f"/>
+  <rect x="180" y="300" width="440" height="95" rx="18" fill="#b8c4c6"/>
+  <text x="150" y="635" fill="#243241" font-family="Arial, sans-serif" font-size="48" font-weight="700">Apartament z widokiem</text>
+</svg>

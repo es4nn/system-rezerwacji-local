@@ -1,0 +1,262 @@
+.lux-navbar {
+  padding: 1rem 0;
+  background: transparent !important;
+  border-bottom: 1px solid transparent;
+  transition: background 0.35s ease, border-color 0.35s ease, padding 0.35s ease, box-shadow 0.35s ease;
+  z-index: 1080;
+}
+
+.lux-navbar.navbar-solid,
+.lux-navbar:has(.navbar-collapse.show) {
+  padding: 0.6rem 0;
+  background: rgba(8, 16, 28, 0.88) !important;
+  backdrop-filter: blur(18px) saturate(145%);
+  -webkit-backdrop-filter: blur(18px) saturate(145%);
+  border-bottom-color: rgba(34, 211, 238, 0.18);
+  box-shadow: 0 18px 46px rgba(0, 0, 0, 0.22);
+}
+
+.lux-navbar-inner {
+  position: relative;
+}
+
+.lux-brand {
+  display: inline-flex;
+  align-items: center;
+  padding: 0;
+  cursor: pointer;
+}
+
+.lux-text-logo {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.45rem;
+  color: #fff;
+  font-size: 1.35rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: 0.08rem;
+  transition: transform 0.25s ease, text-shadow 0.25s ease;
+}
+
+.lux-text-logo span {
+  color: var(--lux-accent, #22d3ee);
+}
+
+.lux-brand:hover .lux-text-logo,
+.lux-footer-brand:hover .lux-text-logo {
+  transform: translateY(-1px);
+  text-shadow: 0 0 18px rgba(34, 211, 238, 0.34);
+}
+
+.lux-nav-links {
+  gap: 0.15rem;
+}
+
+.lux-navbar .nav-link {
+  position: relative;
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 0.9rem;
+  font-weight: 700;
+  padding: 0.65rem 0.9rem !important;
+  text-transform: uppercase;
+  letter-spacing: 0.03rem;
+  transition: color 0.25s ease;
+  cursor: pointer;
+}
+
+.lux-navbar .nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0.9rem;
+  right: 0.9rem;
+  bottom: 0.38rem;
+  height: 2px;
+  border-radius: 999px;
+  background: var(--lux-accent, #22d3ee);
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform 0.25s ease;
+}
+
+.lux-navbar .nav-link:hover,
+.lux-navbar .nav-link.active {
+  color: var(--lux-accent, #22d3ee) !important;
+}
+
+.lux-navbar .nav-link:hover::after,
+.lux-navbar .nav-link.active::after {
+  transform: scaleX(1);
+}
+
+.lux-navbar .nav-link-admin {
+  color: #facc15 !important;
+}
+
+.lux-navbar .nav-link-admin::after {
+  background: #facc15;
+}
+
+.lux-nav-actions {
+  min-width: 176px;
+  justify-content: flex-end;
+}
+
+.lux-user-label {
+  max-width: 230px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 767.98px) {
+  .lux-text-logo {
+    font-size: 1.08rem;
+    gap: 0.35rem;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .lux-navbar {
+    padding: 0.65rem 0;
+  }
+
+  .lux-navbar .navbar-collapse {
+    margin-top: 0.8rem;
+    padding: 1rem;
+    border: 1px solid rgba(34, 211, 238, 0.16);
+    border-radius: 18px;
+    background: rgba(8, 16, 28, 0.94);
+    box-shadow: 0 18px 46px rgba(0, 0, 0, 0.26);
+  }
+
+  .lux-nav-links {
+    gap: 0.25rem;
+  }
+
+  .lux-navbar .nav-link {
+    padding-inline: 0 !important;
+  }
+
+  .lux-navbar .nav-link::after {
+    left: 0;
+    right: auto;
+    width: 42px;
+  }
+
+  .lux-nav-actions {
+    min-width: 0;
+    justify-content: flex-start;
+    align-items: flex-start !important;
+    margin-top: 0.8rem;
+  }
+
+  .lux-user-label {
+    display: block;
+    max-width: 100%;
+    margin-bottom: 0.75rem;
+  }
+}
+
+.lux-footer {
+  background: linear-gradient(135deg, #080f1c 0%, #111827 56%, #070b13 100%);
+  border-top: 1px solid rgba(34, 211, 238, 0.16);
+}
+
+.lux-footer-text-logo {
+  font-size: 1.55rem;
+}
+
+.lux-footer-brand {
+  cursor: pointer;
+}
+
+.lux-footer-text,
+.lux-footer-bottom,
+.lux-contact-list li,
+.lux-footer-links a,
+.lux-footer-bottom-link {
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.lux-footer-heading {
+  font-size: 1.25rem;
+}
+
+.lux-footer-links li + li {
+  margin-top: 0.8rem;
+}
+
+.lux-footer-links a {
+  display: inline-block;
+  text-decoration: none;
+  transition: color 0.25s ease, transform 0.25s ease;
+  cursor: pointer;
+}
+
+.lux-footer-bottom-link {
+  text-decoration: none;
+  transition: color 0.25s ease;
+}
+
+.lux-footer-links a:hover {
+  color: var(--lux-accent, #22d3ee);
+  transform: translateX(0.35rem);
+}
+
+.lux-footer-bottom-link:hover {
+  color: var(--lux-accent, #22d3ee);
+}
+
+.lux-contact-list li {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+  margin-bottom: 0.95rem;
+}
+
+.lux-contact-list i {
+  color: var(--lux-accent, #22d3ee);
+}
+
+.lux-social-link {
+  width: 42px;
+  height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(34, 211, 238, 0.24);
+  border-radius: 50%;
+  color: rgba(255, 255, 255, 0.78);
+  text-decoration: none;
+  transition: transform 0.25s ease, color 0.25s ease;
+}
+
+.lux-social-link:hover {
+  color: var(--lux-accent, #22d3ee);
+}
+
+.lux-newsletter .form-control {
+  min-height: 48px;
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.lux-newsletter .form-control::placeholder {
+  color: rgba(255, 255, 255, 0.54);
+}
+
+.lux-newsletter .btn {
+  border-radius: 0 14px 14px 0;
+}
+
+.lux-footer-bottom {
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+@media (max-width: 767.98px) {
+  .lux-footer-text-logo {
+    font-size: 1.25rem;
+  }
+}

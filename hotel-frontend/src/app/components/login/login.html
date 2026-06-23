@@ -1,0 +1,35 @@
+<div class="row justify-content-center mt-5">
+  <div class="col-md-4">
+    <div class="card shadow-lg border-0">
+      <div class="card-body p-4">
+        <h3 class="text-center mb-4 fw-bold text-primary">Logowanie</h3>
+        <form class="login-form" #loginForm="ngForm" novalidate (ngSubmit)="onLogin(loginForm)">
+          @if (loginError) { <div class="alert alert-danger" role="alert">{{ loginError }}</div> }
+          <div class="mb-3">
+            <label class="form-label fw-bold">Email</label>
+            <input type="email" class="form-control" [(ngModel)]="credentials.email" name="email" #email="ngModel" required email placeholder="email@example.com" [class.is-invalid]="(email.invalid && (email.touched || loginSubmitted)) || fieldErrors['email']" (input)="clearFieldError('email')" [disabled]="isLoggingIn">
+            @if ((email.invalid && (email.touched || loginSubmitted)) || fieldErrors['email']) { <div class="invalid-feedback">{{ fieldErrors['email'] || (email.hasError('required') ? 'To pole jest wymagane.' : 'Podaj poprawny adres e-mail.') }}</div> }
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-bold">Hasło</label>
+            <input type="password" class="form-control" [(ngModel)]="credentials.password" name="password" #password="ngModel" required placeholder="********" [class.is-invalid]="(password.invalid && (password.touched || loginSubmitted)) || fieldErrors['password']" (input)="clearFieldError('password')" [disabled]="isLoggingIn">
+            @if ((password.invalid && (password.touched || loginSubmitted)) || fieldErrors['password']) { <div class="invalid-feedback">{{ fieldErrors['password'] || 'Hasło jest wymagane.' }}</div> }
+          </div>
+          <button type="submit" class="btn btn-primary w-100 fw-bold py-2 mt-2" [disabled]="isLoggingIn">
+            @if (isLoggingIn) {
+              <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+              Przetwarzanie...
+            } @else {
+              ZALOGUJ SIĘ
+            }
+          </button>
+
+          <p class="text-center text-muted small mt-4 mb-0">
+            Nie masz jeszcze konta?
+            <a routerLink="/register" class="fw-bold text-primary text-decoration-none">Załóż konto</a>
+          </p>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

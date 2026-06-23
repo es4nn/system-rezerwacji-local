@@ -1,0 +1,29 @@
+.admin-tabs .btn {
+  min-width: 140px;
+}
+
+.status-select {
+  min-width: 150px;
+}
+
+td,
+th {
+  white-space: nowrap;
+}
+
+td:first-child,
+th:first-child {
+  white-space: normal;
+  min-width: 220px;
+}
+
+@media (max-width: 768px) {
+  .admin-tabs {
+    width: 100%;
+  }
+
+  .admin-tabs .btn {
+    flex: 1;
+    min-width: 0;
+  }
+}

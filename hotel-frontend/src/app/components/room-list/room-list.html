@@ -1,0 +1,421 @@
+<section id="hero" class="lux-hero position-relative overflow-hidden text-center">
+  <div class="lux-hero-slides">
+    @for (slide of heroSlides; track slide; let i = $index) {
+      @if (shouldRenderHeroSlide(i)) {
+        <picture class="lux-hero-slide" [class.active]="i === currentHeroIndex">
+          <source type="image/avif" [attr.srcset]="slide.avifSrcset" sizes="100vw">
+          <source type="image/webp" [attr.srcset]="slide.webpSrcset" sizes="100vw">
+          <img
+            [src]="slide.fallback"
+            [alt]="slide.alt"
+            width="1920"
+            height="1080"
+            [attr.loading]="i === 0 ? 'eager' : 'lazy'"
+            [attr.fetchpriority]="i === 0 ? 'high' : 'auto'"
+            decoding="async">
+        </picture>
+      }
+    }
+  </div>
+  <div class="lux-hero-overlay"></div>
+
+  <div class="lux-hero-content container">
+    <p class="lux-eyebrow mb-3">Hotel Lux · Resort · Restauracja</p>
+    <h1 class="display-2 fw-bold mb-4 text-white">Luksusowy wypoczynek w sercu natury</h1>
+    <p class="lead fw-normal mb-4 mx-auto text-light">
+      Zarezerwuj komfortowy pokój, odkryj wyjątkową restaurację i odpocznij w miejscu stworzonym do relaksu.
+    </p>
+    <button type="button" class="btn btn-info btn-lg px-5 fw-bold shadow-lg rounded-pill" (click)="scrollToRooms()">
+      Zobacz pokoje
+    </button>
+  </div>
+
+  <div class="lux-hero-dots" aria-label="Wybór slajdu">
+    @for (slide of heroSlides; track slide; let i = $index) {
+      <button type="button" [class.active]="i === currentHeroIndex" (click)="setHeroSlide(i)" [attr.aria-label]="'Slajd ' + (i + 1)"></button>
+    }
+  </div>
+</section>
+
+<div class="container py-5" id="rooms">
+  <div class="text-center mb-5">
+    <p class="lux-section-kicker mb-2">Rezerwacja online</p>
+    <h2 class="display-5 text-dark fw-bold">Pokoje i apartamenty Hotel Lux</h2>
+    <p class="text-muted mx-auto lux-section-lead">Wybierz przestrzeń dopasowaną do swojego rytmu pobytu, od eleganckiego pokoju deluxe po apartament z widokiem na jezioro.</p>
+  </div>
+
+  <div class="card border-0 shadow-sm mb-5">
+    <div class="card-body p-4">
+      <form class="row g-3 align-items-end" (ngSubmit)="searchAvailableRooms()">
+        <div class="col-md-4">
+          <label for="searchCheckIn" class="form-label fw-bold text-success">Data przyjazdu</label>
+          <input id="searchCheckIn" type="date" class="form-control form-control-lg" name="search_check_in" [min]="getToday()" [(ngModel)]="availabilitySearch.check_in" [disabled]="isSearchingRooms" required>
+        </div>
+        <div class="col-md-4">
+          <label for="searchCheckOut" class="form-label fw-bold text-danger">Data wyjazdu</label>
+          <input id="searchCheckOut" type="date" class="form-control form-control-lg" name="search_check_out" [min]="availabilitySearch.check_in || getToday()" [(ngModel)]="availabilitySearch.check_out" [disabled]="isSearchingRooms" required>
+        </div>
+        <div class="col-md-2 d-grid">
+          <button type="submit" class="btn btn-primary btn-lg fw-bold shadow-sm" [disabled]="isSearchingRooms">
+            @if (isSearchingRooms) {
+              <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+              Szukam...
+            } @else {
+              Szukaj
+            }
+          </button>
+        </div>
+        <div class="col-md-2 d-grid">
+          <button type="button" class="btn btn-outline-secondary btn-lg" (click)="resetRoomSearch()" [disabled]="isSearchingRooms">Wyczyść</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  @if (!isRoomsLoading && !isSearchingRooms && rooms.length === 0) {
+    <div class="alert alert-info shadow-sm text-center">
+      Brak wolnych pokoi w wybranym terminie. Wybierz inny zakres dat.
+    </div>
+  }
+
+  <div class="row g-4">
+    @if (isRoomsLoading) {
+      @for (item of roomSkeletons; track $index) {
+        <div class="col-md-6 col-xl-3" aria-hidden="true">
+          <div class="card h-100 border-0 room-card lux-room-card lux-room-skeleton">
+            <div class="lux-room-image skeleton-block"></div>
+            <div class="card-body p-4">
+              <div class="skeleton-line skeleton-line-kicker mb-2"></div>
+              <div class="skeleton-line skeleton-line-title mb-3"></div>
+              <div class="skeleton-line mb-2"></div>
+              <div class="skeleton-line skeleton-line-short mb-4"></div>
+              <div class="d-flex align-items-end justify-content-between gap-3 mt-auto">
+                <div class="skeleton-line skeleton-line-price"></div>
+                <div class="skeleton-pill"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+    }
+
+    @for (room of rooms; track room.id) {
+      <div class="col-md-6 col-xl-3">
+        <button type="button" class="card h-100 border-0 transition-hover room-card lux-room-card text-start w-100" (click)="selectRoom(room)" [attr.aria-label]="'Zobacz szczegóły i rezerwację: ' + getRoomTitle(room) + ', pokój ' + room.room_number">
+          <img
+            [src]="getRoomCardImageUrl(room)"
+            [attr.srcset]="getRoomImageSrcset(room)"
+            sizes="(min-width: 1200px) 306px, (min-width: 768px) 50vw, calc(100vw - 48px)"
+            class="card-img-top lux-room-image"
+            [alt]="getRoomTitle(room)"
+            width="600"
+            height="450"
+            loading="lazy"
+            decoding="async">
+          <div class="card-body p-4">
+            <div class="d-flex justify-content-between align-items-start gap-3 mb-3">
+              <div>
+                <p class="text-info small fw-bold text-uppercase mb-1">Pokój {{ room.room_number }}</p>
+                <h3 class="h5 card-title fw-bold mb-0">{{ getRoomTitle(room) }}</h3>
+              </div>
+              <span class="badge rounded-pill text-bg-light border">Do {{ room.capacity }} os.</span>
+            </div>
+            <p class="card-text text-muted small lux-room-description">{{ getRoomDescription(room) }}</p>
+            <div class="d-flex align-items-end justify-content-between gap-3 mt-auto">
+              <h4 class="fw-bold my-0 text-dark">{{ room.price_per_night }} PLN <span class="fs-6 fw-normal text-muted">/ noc</span></h4>
+              <span class="btn btn-info btn-sm rounded-pill fw-bold px-3">Zarezerwuj</span>
+            </div>
+          </div>
+        </button>
+      </div>
+    }
+  </div>
+</div>
+
+@if (selectedRoom) {
+  <div class="modal fade show room-modal d-block" tabindex="-1" role="dialog" aria-modal="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content border-0 shadow-lg">
+        <div class="modal-header border-0 pb-0">
+          <div>
+            <p class="text-uppercase text-primary fw-bold small mb-1">Hotel Lux</p>
+            <h3 class="modal-title fw-bold">{{ getRoomTitle(selectedRoom) }}</h3>
+          </div>
+          <button type="button" class="btn-close" aria-label="Zamknij" (click)="closeRoomModal()" [disabled]="isBookingSaving"></button>
+        </div>
+
+        <div class="modal-body pt-3">
+          <div class="row g-4">
+            <div class="col-lg-7">
+              <img
+                [src]="getRoomDetailImageUrl(selectedRoom)"
+                [attr.srcset]="getRoomImageSrcset(selectedRoom)"
+                sizes="(min-width: 992px) 58vw, 100vw"
+                class="img-fluid rounded-3 room-modal-image shadow-sm"
+                [alt]="getRoomTitle(selectedRoom)"
+                width="1200"
+                height="800"
+                loading="eager"
+                decoding="async">
+
+              <div class="mt-4">
+                <div class="d-flex flex-wrap gap-2 mb-3">
+                  <span class="badge rounded-pill text-bg-info text-dark px-3 py-2">Miejsca: {{ selectedRoom.capacity }}</span>
+                  <span class="badge rounded-pill text-bg-light border px-3 py-2">{{ selectedRoom.price_per_night }} PLN / noc</span>
+                </div>
+
+                <h5 class="fw-bold">Opis pokoju</h5>
+                <p class="text-muted mb-4">{{ getRoomDescription(selectedRoom) }}</p>
+
+                <h5 class="fw-bold">Udogodnienia</h5>
+                <div class="row g-2">
+                  @for (amenity of getRoomAmenities(selectedRoom); track amenity) {
+                    <div class="col-sm-6">
+                      <div class="amenity-item">
+                        <i class="bi bi-check2-circle text-success" aria-hidden="true"></i>
+                        <span>{{ amenity }}</span>
+                      </div>
+                    </div>
+                  }
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-5">
+              <div class="reservation-panel bg-light rounded-3 p-4 border">
+                <h4 class="fw-bold mb-3">Rezerwacja</h4>
+
+                <form novalidate (ngSubmit)="confirmBooking(bookingForm)" #bookingForm="ngForm" #bookingFormElement>
+                  @if (bookingFormError) { <div class="alert alert-danger" role="alert">{{ bookingFormError }}</div> }
+                  <div class="mb-3">
+                    <label class="form-label fw-bold">Imię i Nazwisko</label>
+                    <input type="text" class="form-control" name="customer_name" [(ngModel)]="newBooking.customer_name" #customerName="ngModel" required [class.is-invalid]="(customerName.invalid && (customerName.touched || bookingFormSubmitted)) || bookingFieldErrors['customer_name']" (input)="clearBookingFieldError('customer_name')">
+                    @if ((customerName.invalid && (customerName.touched || bookingFormSubmitted)) || bookingFieldErrors['customer_name']) { <div class="invalid-feedback">{{ bookingFieldErrors['customer_name'] || 'To pole jest wymagane.' }}</div> }
+                  </div>
+
+                  <div class="row">
+                    <div class="col-md-6 mb-3">
+                      <label class="form-label fw-bold text-success">Data przyjazdu</label>
+                      <input type="date" class="form-control" name="check_in" [min]="getToday()" [(ngModel)]="newBooking.check_in" #checkIn="ngModel" (change)="calculateTotalPrice(); clearBookingFieldError('check_in')" required [class.is-invalid]="(checkIn.invalid && (checkIn.touched || bookingFormSubmitted)) || bookingFieldErrors['check_in']">
+                      @if ((checkIn.invalid && (checkIn.touched || bookingFormSubmitted)) || bookingFieldErrors['check_in']) { <div class="invalid-feedback">{{ bookingFieldErrors['check_in'] || 'Wybierz datę przyjazdu.' }}</div> }
+                    </div>
+                    <div class="col-md-6 mb-3">
+                      <label class="form-label fw-bold text-danger">Data wyjazdu</label>
+                      <input type="date" class="form-control" name="check_out" [min]="newBooking.check_in || getToday()" [(ngModel)]="newBooking.check_out" #checkOut="ngModel" (change)="calculateTotalPrice(); clearBookingFieldError('check_out')" required [class.is-invalid]="(checkOut.invalid && (checkOut.touched || bookingFormSubmitted)) || invalidBookingDateRange || bookingFieldErrors['check_out']">
+                      @if ((checkOut.invalid && (checkOut.touched || bookingFormSubmitted)) || invalidBookingDateRange || bookingFieldErrors['check_out']) { <div class="invalid-feedback">{{ bookingFieldErrors['check_out'] || (invalidBookingDateRange ? 'Data wyjazdu musi być późniejsza niż data przyjazdu.' : 'Wybierz datę wyjazdu.') }}</div> }
+                    </div>
+                  </div>
+
+                  <div class="mt-2 p-3 rounded-3 text-center bg-white border">
+                    @if (newBooking.total_price > 0) {
+                      <p class="mb-0 fw-bold">Suma: <span class="text-success fs-3">{{ newBooking.total_price }} PLN</span></p>
+                    } @else if (selectedDatesOverlap) {
+                      <p class="mb-0 text-danger fw-semibold">Ten termin jest już zajęty. Wybierz inne daty.</p>
+                    } @else {
+                      <p class="mb-0 text-muted">Wybierz poprawne daty, aby zobaczyć cenę</p>
+                    }
+                  </div>
+
+                  <div class="payment-info mt-3">
+                    <i class="bi bi-wallet2" aria-hidden="true"></i>
+                    <span>Płatność za pobyt realizowana jest na miejscu w recepcji.</span>
+                  </div>
+
+                  <div class="d-grid gap-2 mt-4">
+                    <button type="submit" class="btn btn-primary btn-lg shadow fw-bold" [disabled]="isBookingSaving">
+                      @if (isBookingSaving) {
+                        <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                        Przetwarzanie...
+                      } @else {
+                        POTWIERDZAM
+                      }
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary" (click)="closeRoomModal()" [disabled]="isBookingSaving">Anuluj</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop fade show" (click)="!isBookingSaving && closeRoomModal()"></div>
+}
+
+<section id="about" class="py-5 lux-resort-section">
+  <div class="container">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-6">
+        <div class="lux-resort-image-wrap">
+          <picture>
+            <source type="image/avif" srcset="/assets/hero-restaurant-768.avif 768w, /assets/hero-restaurant-1280.avif 1280w, /assets/hero-restaurant-1920.avif 1920w" sizes="(min-width: 992px) 50vw, 100vw">
+            <source type="image/webp" srcset="/assets/hero-restaurant-768.webp 768w, /assets/hero-restaurant-1280.webp 1280w, /assets/hero-restaurant-1920.webp 1920w" sizes="(min-width: 992px) 50vw, 100vw">
+            <img src="/assets/hero-restaurant-1280.webp" class="img-fluid lux-resort-image shadow-lg" alt="Restauracja Hotel Lux" width="1280" height="720" loading="lazy" decoding="async">
+          </picture>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <p class="lux-section-kicker mb-2">Doświadczenie pobytu</p>
+        <h2 class="display-5 fw-bold text-dark mb-4">Restauracja, komfort i wyjątkowy klimat</h2>
+        <p class="lead text-dark">
+          Hotel Lux łączy eleganckie wnętrza, spokojne otoczenie natury i kuchnię, która dopełnia cały pobyt.
+        </p>
+        <p class="text-muted">
+          Od porannej kawy z widokiem po wieczorną kolację w nastrojowej restauracji, każdy detal pracuje tu na poczucie spokoju, prywatności i klasy.
+        </p>
+        <div class="row g-3 mt-4 text-start">
+          <div class="col-sm-6">
+            <div class="lux-feature"><i class="bi bi-stars text-info me-2" aria-hidden="true"></i> Eleganckie wnętrza</div>
+          </div>
+          <div class="col-sm-6">
+            <div class="lux-feature"><i class="bi bi-water text-info me-2" aria-hidden="true"></i> Widok na naturę</div>
+          </div>
+          <div class="col-sm-6">
+            <div class="lux-feature"><i class="bi bi-cup-hot-fill text-info me-2" aria-hidden="true"></i> Restauracja premium</div>
+          </div>
+          <div class="col-sm-6">
+            <div class="lux-feature"><i class="bi bi-shield-check text-info me-2" aria-hidden="true"></i> Dyskretna obsługa</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="reviews" class="lux-reviews-section py-5 overflow-hidden position-relative">
+  <div class="container position-relative">
+    <span class="lux-section-kicker d-block text-center mb-2">Opinie</span>
+    <h2 class="text-center mb-5 fw-bold">Opinie naszych gości</h2>
+    
+    <button class="nav-btn btn-prev" (click)="movePrev()" aria-label="Poprzednia">
+      <i class="bi bi-chevron-left" aria-hidden="true"></i>
+    </button>
+    <button class="nav-btn btn-next" (click)="moveNext()" aria-label="Następna">
+      <i class="bi bi-chevron-right" aria-hidden="true"></i>
+    </button>
+
+    <div class="review-slider-container" #slider 
+         (mouseenter)="stopAutoScroll()" 
+         (mouseleave)="startAutoScroll()">
+      <div class="review-track">
+        @for (review of [
+          {n: 'Tomasz W.', t: 'Niesamowity widok na morze i przemiła obsługa. Na pewno wrócimy!'},
+          {n: 'Magdalena K.', t: 'Śniadania to po prostu poezja. Bardzo duży wybór lokalnych produktów.'},
+          {n: 'Robert N.', t: 'Pokoje są urządzone z ogromnym smakiem. Czystość na najwyższym poziomie.'},
+          {n: 'Anna L.', t: 'Strefa SPA pozwoliła mi w pełni się zrelaksować. Masaże są rewelacyjne!'},
+          {n: 'Piotr S.', t: 'Bardzo szybkie Wi-Fi, co było dla mnie kluczowe przy pracy zdalnej.'},
+          {n: 'Karolina M.', t: 'Idealne miejsce na rodzinny wyjazd. Dzieci uwielbiały kącik zabaw.'},
+          {n: 'Janusz P.', t: 'System rezerwacji online działa błyskawicznie. Wszystko jasno i klarownie.'},
+          {n: 'Monika D.', t: 'Lokalizacja w samym centrum, a jednak w pokoju było idealnie cicho.'},
+          {n: 'Paweł B.', t: 'Najlepszy stosunek jakości do ceny. Standard przewyższył moje oczekiwania.'}
+        ]; track $index) {
+          <div class="review-item">
+            <div class="card h-100 p-4 review-card border-0">
+              <div class="review-stars mb-3">
+                <span class="visually-hidden">Ocena 5 na 5</span>
+                <i class="bi bi-star-fill" aria-hidden="true"></i><i class="bi bi-star-fill ms-1" aria-hidden="true"></i><i class="bi bi-star-fill ms-1" aria-hidden="true"></i><i class="bi bi-star-fill ms-1" aria-hidden="true"></i><i class="bi bi-star-fill ms-1" aria-hidden="true"></i>
+              </div>
+              <p class="review-text mb-4">"{{ review.t }}"</p>
+              <p class="review-author mt-auto mb-0">{{ review.n }}</p>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contact" class="lux-contact-section py-5">
+  <div class="container">
+    <div class="row g-5 align-items-center">
+      <div class="col-lg-6 text-start">
+        <span class="lux-section-kicker">Kontakt</span>
+        <h2 class="lux-contact-title mt-3 mb-4">
+          Skontaktuj się z nami. Twój idealny pobyt zaczyna się od rozmowy.
+        </h2>
+        <p class="lux-contact-lead mb-5">
+          Napisz do recepcji Hotel Lux, jeśli chcesz zaplanować pobyt, zapytać o apartamenty lub przygotować wyjątkową niespodziankę dla bliskich.
+        </p>
+
+        <div class="lux-contact-links d-grid gap-3">
+          <a class="lux-contact-link" href="tel:+48123456789">
+            <span class="lux-contact-icon"><i class="bi bi-telephone-fill" aria-hidden="true"></i></span>
+            <span>
+              <strong>Telefon</strong>
+              <small>+48 123 456 789</small>
+            </span>
+          </a>
+          <a class="lux-contact-link" href="mailto:kontakt@hotel-lux.pl">
+            <span class="lux-contact-icon"><i class="bi bi-envelope-fill" aria-hidden="true"></i></span>
+            <span>
+              <strong>E-mail</strong>
+              <small>kontakt&#64;hotel-lux.pl</small>
+            </span>
+          </a>
+          <a class="lux-contact-link" href="https://maps.google.com/?q=ul.+Morska+15,+80-001+Gdańsk" target="_blank" rel="noopener noreferrer">
+            <span class="lux-contact-icon"><i class="bi bi-geo-alt-fill" aria-hidden="true"></i></span>
+            <span>
+              <strong>Adres</strong>
+              <small>ul. Morska 15, 80-001 Gdańsk</small>
+            </span>
+          </a>
+        </div>
+      </div>
+
+      <div class="col-lg-6">
+        <div class="lux-contact-card card border-0 shadow-sm">
+          <div class="card-body p-4 p-lg-5">
+            <h3 class="h4 fw-bold mb-2 text-dark">Napisz wiadomość</h3>
+            <p class="text-muted mb-4">Odpowiemy z propozycją dopasowaną do Twoich planów.</p>
+
+            <form class="row g-3" [formGroup]="contactForm" (ngSubmit)="submitContactForm()">
+              @if (contactFormError) { <div class="col-12"><div class="alert alert-danger mb-0" role="alert">{{ contactFormError }}</div></div> }
+              <div class="col-12">
+                <label for="contactFullName" class="form-label fw-semibold">Imię i nazwisko</label>
+                <input id="contactFullName" type="text" class="form-control lux-contact-input" formControlName="fullName" placeholder="Jan Kowalski" [class.is-invalid]="contactForm.controls.fullName.invalid && contactForm.controls.fullName.touched || contactFieldErrors['fullName']" (input)="clearContactFieldError('fullName')">
+                @if ((contactForm.controls.fullName.invalid && contactForm.controls.fullName.touched) || contactFieldErrors['fullName']) { <div class="invalid-feedback">{{ contactFieldErrors['fullName'] || 'To pole jest wymagane.' }}</div> }
+              </div>
+
+              <div class="col-12">
+                <label for="contactPhone" class="form-label fw-semibold">Telefon</label>
+                <input id="contactPhone" type="tel" class="form-control lux-contact-input" formControlName="phone" placeholder="48123456789" [class.is-invalid]="contactForm.controls.phone.invalid && contactForm.controls.phone.touched || contactFieldErrors['phone']" (input)="clearContactFieldError('phone')">
+                @if ((contactForm.controls.phone.invalid && contactForm.controls.phone.touched) || contactFieldErrors['phone']) {
+                  <div class="invalid-feedback">{{ contactFieldErrors['phone'] || (contactForm.controls.phone.hasError('required') ? 'To pole jest wymagane.' : 'Podaj poprawny numer telefonu.') }}</div>
+                }
+              </div>
+
+              <div class="col-12">
+                <label for="contactEmail" class="form-label fw-semibold">Adres e-mail</label>
+                <input id="contactEmail" type="email" class="form-control lux-contact-input" formControlName="email" placeholder="jan@example.com" [class.is-invalid]="contactForm.controls.email.invalid && contactForm.controls.email.touched || contactFieldErrors['email']" (input)="clearContactFieldError('email')">
+                @if ((contactForm.controls.email.invalid && contactForm.controls.email.touched) || contactFieldErrors['email']) {
+                  <div class="invalid-feedback">{{ contactFieldErrors['email'] || (contactForm.controls.email.hasError('required') ? 'To pole jest wymagane.' : 'Podaj poprawny adres e-mail.') }}</div>
+                }
+              </div>
+
+              <div class="col-12">
+                <label for="contactMessage" class="form-label fw-semibold">Wiadomość</label>
+                <textarea id="contactMessage" class="form-control lux-contact-input" rows="5" formControlName="message" placeholder="Opowiedz nam, jakiego pobytu szukasz..." [class.is-invalid]="contactForm.controls.message.invalid && contactForm.controls.message.touched || contactFieldErrors['message']" (input)="clearContactFieldError('message')"></textarea>
+                @if ((contactForm.controls.message.invalid && contactForm.controls.message.touched) || contactFieldErrors['message']) {
+                  <div class="invalid-feedback">{{ contactFieldErrors['message'] || (contactForm.controls.message.hasError('required') ? 'To pole jest wymagane.' : 'Wiadomość może mieć maksymalnie 1000 znaków.') }}</div>
+                }
+              </div>
+
+              <div class="col-12">
+                <button type="submit" class="btn btn-info btn-lg w-100 fw-bold lux-contact-submit" [disabled]="isContactSending">
+                  @if (isContactSending) {
+                    <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                    Wysyłanie...
+                  } @else {
+                    Wyślij wiadomość
+                  }
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,562 @@
+.lux-hero {
+  min-height: calc(100vh - 74px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  background: #07111f;
+  isolation: isolate;
+}
+
+.lux-hero-slides,
+.lux-hero-overlay {
+  position: absolute;
+  inset: 0;
+}
+
+.lux-hero-slide {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transform: scale(1.035);
+  transition: opacity 1.1s ease, transform 4.8s ease;
+}
+
+.lux-hero-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.lux-hero-slide.active {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.lux-hero-overlay {
+  z-index: 1;
+  background:
+    linear-gradient(180deg, rgba(5, 10, 18, 0.38), rgba(5, 10, 18, 0.72)),
+    radial-gradient(circle at center, rgba(13, 202, 240, 0.14), transparent 52%);
+}
+
+.lux-hero-content {
+  position: relative;
+  z-index: 2;
+  padding: 6rem 1rem;
+}
+
+.lux-hero-content .lead {
+  max-width: 780px;
+  color: rgba(255, 255, 255, 0.86);
+}
+
+.lux-eyebrow,
+.lux-section-kicker {
+  color: #066d82;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.16rem;
+  font-size: 0.78rem;
+}
+
+.lux-hero-dots {
+  position: absolute;
+  z-index: 3;
+  left: 50%;
+  bottom: 2rem;
+  display: flex;
+  gap: 0.7rem;
+  transform: translateX(-50%);
+}
+
+.lux-hero-dots button {
+  width: 4rem;
+  height: 0.28rem;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.45);
+  transform: scaleX(0.625);
+  transition: background 0.25s ease, transform 0.25s ease;
+}
+
+.lux-hero-dots button.active {
+  background: #12c7e8;
+  transform: scaleX(1);
+}
+
+.lux-section-lead {
+  max-width: 760px;
+}
+
+.room-card {
+  cursor: pointer;
+}
+
+button.room-card {
+  color: inherit;
+  background: #fff;
+  text-align: inherit;
+}
+
+button.room-card:focus-visible {
+  outline: 3px solid rgba(8, 127, 153, 0.42);
+  outline-offset: 4px;
+}
+
+.transition-hover {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.transition-hover:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 22px 50px rgba(8, 16, 28, 0.18) !important;
+}
+
+.lux-room-card {
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 14px 34px rgba(8, 16, 28, 0.12);
+  background: #fff;
+  min-height: 484px;
+}
+
+.lux-room-card .card-body {
+  display: flex;
+  flex-direction: column;
+}
+
+.lux-room-image {
+  width: 100%;
+  height: 225px;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+
+.lux-room-description {
+  min-height: 84px;
+  line-height: 1.55;
+}
+
+.lux-room-skeleton {
+  min-height: 484px;
+  pointer-events: none;
+}
+
+.skeleton-block,
+.skeleton-line,
+.skeleton-pill {
+  background: linear-gradient(90deg, #eef3f7 0%, #f8fafc 48%, #eef3f7 100%);
+  background-size: 220% 100%;
+  animation: skeleton-shimmer 1.4s ease-in-out infinite;
+}
+
+.skeleton-line {
+  width: 100%;
+  height: 0.86rem;
+  border-radius: 999px;
+}
+
+.skeleton-line-kicker {
+  width: 42%;
+  height: 0.74rem;
+}
+
+.skeleton-line-title {
+  width: 78%;
+  height: 1.35rem;
+}
+
+.skeleton-line-short {
+  width: 64%;
+}
+
+.skeleton-line-price {
+  width: 44%;
+  height: 1.6rem;
+}
+
+.skeleton-pill {
+  width: 102px;
+  height: 31px;
+  border-radius: 999px;
+}
+
+@keyframes skeleton-shimmer {
+  0% { background-position: 120% 0; }
+  100% { background-position: -120% 0; }
+}
+
+.room-modal {
+  z-index: 1090;
+}
+
+.room-modal-image {
+  width: 100%;
+  height: 430px;
+  object-fit: cover;
+}
+
+.reservation-panel {
+  position: sticky;
+  top: 1rem;
+}
+
+.payment-info {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.9rem 1rem;
+  color: #075985;
+  border: 1px solid rgba(13, 202, 240, 0.24);
+  border-radius: 8px;
+  background: rgba(13, 202, 240, 0.1);
+  font-size: 0.92rem;
+  font-weight: 700;
+  line-height: 1.45;
+}
+
+.payment-info i {
+  color: #0891b2;
+  font-size: 1.15rem;
+  line-height: 1.25;
+}
+
+.amenity-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 44px;
+  padding: 0.65rem 0.75rem;
+  border: 1px solid rgba(0,0,0,0.08);
+  border-radius: 8px;
+  background: #fff;
+  font-weight: 500;
+}
+
+.lux-resort-section {
+  background: linear-gradient(180deg, #ffffff 0%, #f6f9fb 100%);
+}
+
+.lux-resort-image-wrap {
+  position: relative;
+}
+
+.lux-resort-image-wrap::after {
+  content: "";
+  position: absolute;
+  inset: auto 2rem -1.2rem 2rem;
+  height: 2.4rem;
+  border-radius: 999px;
+  background: rgba(13, 202, 240, 0.22);
+  filter: blur(22px);
+  z-index: 0;
+}
+
+.lux-resort-image {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  border-radius: 22px;
+}
+
+.lux-feature {
+  border: 1px solid rgba(13, 202, 240, 0.18);
+  border-radius: 16px;
+  padding: 0.95rem 1rem;
+  background: rgba(255, 255, 255, 0.82);
+  box-shadow: 0 12px 30px rgba(8, 16, 28, 0.06);
+  font-weight: 700;
+}
+
+.modal-backdrop {
+  z-index: 1085;
+}
+
+.lux-reviews-section {
+  background:
+    linear-gradient(180deg, #f8fafc 0%, #ffffff 55%, #f6fbff 100%);
+}
+
+.lux-reviews-section .container {
+  position: relative;
+}
+
+.review-slider-container {
+  display: block;
+  width: 100%;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+  padding: 36px 0 42px;
+}
+
+.review-track {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 24px;
+}
+
+.review-item {
+  flex: 0 0 calc((100% - 48px) / 3);
+  min-width: 280px;
+  box-sizing: border-box;
+}
+
+.review-card {
+  position: relative;
+  overflow: hidden;
+  height: 100%;
+  min-height: 230px;
+  cursor: pointer;
+  border-radius: 12px;
+  background-color: #fff !important;
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.08);
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+
+.review-card::before {
+  content: "\201C";
+  position: absolute;
+  top: -0.65rem;
+  left: 1.1rem;
+  color: rgba(15, 23, 42, 0.055);
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 7rem;
+  font-weight: 800;
+  line-height: 1;
+  pointer-events: none;
+}
+
+.review-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 26px 62px rgba(15, 23, 42, 0.13);
+}
+
+.review-stars {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.18rem;
+  color: #d4a017;
+  font-size: 0.92rem;
+}
+
+.review-stars .ms-1 {
+  margin-left: 0 !important;
+}
+
+.review-text {
+  position: relative;
+  z-index: 1;
+  color: #334155;
+  font-size: 0.98rem;
+  font-style: italic;
+  line-height: 1.78;
+}
+
+.review-author {
+  position: relative;
+  z-index: 1;
+  color: #0f172a;
+  font-size: 0.92rem;
+  font-weight: 800;
+  letter-spacing: 0.02rem;
+}
+
+.lux-contact-section {
+  background:
+    linear-gradient(180deg, #ffffff 0%, #f7fbff 100%);
+}
+
+.lux-contact-title {
+  max-width: 680px;
+  color: #0f172a;
+  font-size: clamp(2.15rem, 4vw, 3.65rem);
+  font-weight: 800;
+  line-height: 1.06;
+}
+
+.lux-contact-lead {
+  max-width: 590px;
+  color: #64748b;
+  font-size: 1.08rem;
+  line-height: 1.8;
+}
+
+.lux-contact-link {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  max-width: 520px;
+  padding: 1rem 1.1rem;
+  color: #0f172a;
+  text-decoration: none;
+  border: 1px solid rgba(13, 202, 240, 0.22);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.86);
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.06);
+  transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
+}
+
+.lux-contact-link:hover {
+  color: #0f172a;
+  border-color: rgba(13, 202, 240, 0.56);
+  box-shadow: 0 16px 34px rgba(15, 23, 42, 0.1);
+  transform: translateY(-2px);
+}
+
+.lux-contact-icon {
+  width: 44px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 44px;
+  color: #0891b2;
+  border-radius: 8px;
+  background: rgba(13, 202, 240, 0.12);
+}
+
+.lux-contact-link strong,
+.lux-contact-link small {
+  display: block;
+}
+
+.lux-contact-link small {
+  margin-top: 0.18rem;
+  color: #64748b;
+}
+
+.lux-contact-card {
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 20px 48px rgba(15, 23, 42, 0.12) !important;
+}
+
+.lux-contact-input {
+  min-height: 52px;
+  border-color: #dbe7f0;
+  border-radius: 8px;
+  background: #fbfdff;
+}
+
+.lux-contact-input:focus {
+  border-color: #087f99;
+  box-shadow: 0 0 0 0.2rem rgba(13, 202, 240, 0.16);
+}
+
+textarea.lux-contact-input {
+  min-height: 140px;
+}
+
+.lux-contact-submit {
+  min-height: 54px;
+  color: #06202a;
+  border: 0;
+  border-radius: 8px;
+  box-shadow: 0 12px 24px rgba(8, 127, 153, 0.24);
+}
+
+.lux-contact-submit:disabled {
+  color: rgba(6, 32, 42, 0.56);
+  background-color: #9dddea;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+.nav-btn {
+  position: absolute;
+  top: 65%;
+  transform: translateY(-50%);
+  z-index: 10;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  background: rgba(255, 255, 255, 0.92);
+  color: #0f172a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 14px 32px rgba(15, 23, 42, 0.12);
+  transition: transform 0.25s ease, color 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.nav-btn i {
+  font-size: 1.1rem;
+}
+
+.nav-btn:hover {
+  color: #0891b2;
+  border-color: rgba(8, 145, 178, 0.24);
+  transform: translateY(-50%) scale(1.06);
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.16);
+}
+
+.btn-prev {
+  left: -18px;
+}
+
+.btn-next {
+  right: -18px;
+}
+
+@media (max-width: 1200px) {
+  .btn-prev { left: 5px; }
+  .btn-next { right: 5px; }
+}
+
+@media (max-width: 768px) {
+  .lux-hero {
+    min-height: 78vh;
+  }
+
+  .lux-hero-content {
+    padding: 4rem 1rem;
+  }
+
+  .lux-hero-content h1 {
+    font-size: 2.65rem;
+  }
+
+  .lux-room-image {
+    height: 245px;
+  }
+
+  .lux-room-card,
+  .lux-room-skeleton {
+    min-height: 504px;
+  }
+
+  .nav-btn { display: none; }
+  .review-slider-container { overflow-x: auto; } 
+  .review-item { flex: 0 0 85%; }
+  .room-modal-image { height: 280px; }
+  .reservation-panel { position: static; }
+
+  .lux-contact-title {
+    font-size: 2.25rem;
+  }
+
+  .lux-contact-card .card-body {
+    padding: 1.35rem !important;
+  }
+
+  /*
+   * Sekcje położone głęboko poza pierwszym ekranem nie uczestniczą w
+   * początkowym mobile layout ani w ponownym layoutowaniu po załadowaniu fontów.
+   * Wartość auto zachowuje zmierzony rozmiar po pierwszym wyświetleniu sekcji.
+   */
+  .lux-resort-section,
+  .lux-reviews-section,
+  .lux-contact-section {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 720px;
+  }
+}
+

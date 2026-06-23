@@ -1,0 +1,90 @@
+.room-details-modal {
+  z-index: 1060;
+}
+
+.room-details-backdrop {
+  z-index: 1050;
+}
+
+.room-details-image {
+  height: 360px;
+  object-fit: cover;
+  border-radius: 1.25rem;
+}
+
+.room-details-stat {
+  background: rgba(248, 249, 250, 0.92);
+  border: 1px solid rgba(222, 226, 230, 0.85);
+  border-radius: 1rem;
+  padding: 1rem;
+}
+
+.payment-info {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.9rem 1rem;
+  color: #075985;
+  border: 1px solid rgba(13, 202, 240, 0.24);
+  border-radius: 0.75rem;
+  background: rgba(13, 202, 240, 0.1);
+  font-size: 0.92rem;
+  font-weight: 700;
+  line-height: 1.45;
+}
+
+.payment-info i {
+  color: #0891b2;
+  font-size: 1.15rem;
+  line-height: 1.25;
+}
+
+.amenity-pill {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  background: rgba(13, 202, 240, 0.12);
+  color: #087990;
+  border: 1px solid rgba(13, 202, 240, 0.28);
+  padding: 0.45rem 0.85rem;
+  font-weight: 600;
+}
+
+.room-details-description {
+  color: #495057;
+  line-height: 1.7;
+}
+
+@media (max-width: 767.98px) {
+  .room-details-image {
+    height: 240px;
+  }
+}
+.page-loader-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: grid;
+  place-items: center;
+  background: rgba(8, 15, 28, 0.48);
+  backdrop-filter: blur(3px);
+}
+
+.page-loader-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 1.4rem 1.8rem;
+  color: #fff;
+  font-weight: 700;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 1rem;
+  background: rgba(8, 15, 28, 0.86);
+  box-shadow: 0 1.25rem 3.5rem rgba(0, 0, 0, 0.3);
+}
+
+.page-loader-content .spinner-border {
+  width: 3rem;
+  height: 3rem;
+}

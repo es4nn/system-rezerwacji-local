@@ -1,0 +1,158 @@
+<nav class="navbar navbar-expand-lg navbar-dark lux-navbar fixed-top" [ngClass]="{ 'navbar-solid': isScrolled || !isHomeRoute }">
+  <div class="container lux-navbar-inner">
+    <a class="navbar-brand lux-brand" role="button" tabindex="0" aria-label="Hotel Lux" (click)="onLogoClick($event)" (keydown.enter)="onLogoClick($event)" (keydown.space)="onLogoClick($event)">
+      <span class="lux-text-logo">
+        HOTEL <span>LUX</span>
+      </span>
+    </a>
+
+    <button class="navbar-toggler border-info" type="button" aria-controls="mainNavbar" [attr.aria-expanded]="isMobileMenuOpen" aria-label="Przełącz nawigację" (click)="toggleMobileMenu()">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" [class.show]="isMobileMenuOpen" id="mainNavbar">
+      <ul class="navbar-nav mx-auto lux-nav-links">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/" fragment="rooms" (click)="closeMobileMenu()">Pokoje</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/" fragment="about" (click)="closeMobileMenu()">Restauracja</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/" fragment="reviews" (click)="closeMobileMenu()">Opinie</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/" fragment="contact" (click)="closeMobileMenu()">Kontakt</a>
+        </li>
+
+        @if (authService.isLoggedIn()) {
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/my-bookings" routerLinkActive="active" (click)="closeMobileMenu()">
+               <i class="bi bi-calendar-check me-1" aria-hidden="true"></i> Moje Rezerwacje
+            </a>
+          </li>
+        }
+
+        @if (authService.isLoggedIn() && authService.isAdmin()) {
+          <li class="nav-item">
+          <a class="nav-link nav-link-admin fw-bold" routerLink="/admin" routerLinkActive="active" (click)="closeMobileMenu()">
+              <i class="bi bi-shield-lock me-1" aria-hidden="true"></i> PANEL ADMINA
+            </a>
+          </li>
+        }
+      </ul>
+
+      <div class="d-flex align-items-center lux-nav-actions">
+        @if (authService.isLoggedIn()) {
+          <span class="text-light me-3 small lux-user-label">
+            Zalogowany jako: <strong>{{ authService.getUserName() }}</strong>
+          </span>
+          <button class="btn btn-outline-light btn-sm rounded-pill px-3" (click)="logout()">Wyloguj</button>
+        } @else {
+          <a routerLink="/login" class="btn btn-info btn-sm px-4 shadow-sm fw-bold rounded-pill" (click)="closeMobileMenu()">Zaloguj się</a>
+        }
+      </div>
+    </div>
+  </div>
+</nav>
+
+<main style="min-height: 60vh;">
+  <router-outlet></router-outlet>
+</main>
+
+<footer class="lux-footer text-light mt-5">
+  <div class="container py-5">
+    <div class="row g-5 text-start">
+      <div class="col-lg-4 col-md-6">
+        <a class="lux-footer-brand d-inline-flex align-items-center mb-4" routerLink="/" aria-label="Hotel Lux">
+          <span class="lux-text-logo lux-footer-text-logo">
+            HOTEL <span>LUX</span>
+          </span>
+        </a>
+        <p class="lux-footer-text mb-4">
+          Hotel Lux tworzy miejsce, w którym elegancja spotyka spokój natury, a szybka rezerwacja prowadzi do pobytu dopracowanego w każdym detalu.
+        </p>
+        <div class="d-flex gap-3">
+          <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" class="lux-social-link" aria-label="Facebook">
+            <i class="bi bi-facebook" aria-hidden="true"></i>
+          </a>
+          <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="lux-social-link" aria-label="Instagram">
+            <i class="bi bi-instagram" aria-hidden="true"></i>
+          </a>
+        </div>
+      </div>
+
+      <div class="col-lg-2 col-md-6">
+        <h2 class="lux-footer-heading text-white mb-4">Szybkie linki</h2>
+        <ul class="list-unstyled lux-footer-links mb-0">
+          <li><a routerLink="/" fragment="rooms">Pokoje</a></li>
+          <li><a routerLink="/" fragment="about">Restauracja</a></li>
+          <li><a routerLink="/" fragment="about">SPA</a></li>
+          <li><a routerLink="/" fragment="contact">Kontakt</a></li>
+        </ul>
+      </div>
+
+      <div class="col-lg-3 col-md-6">
+        <h2 class="lux-footer-heading text-white mb-4">Kontakt</h2>
+        <ul class="list-unstyled lux-contact-list mb-0">
+          <li>
+            <i class="bi bi-geo-alt-fill" aria-hidden="true"></i>
+            <span>ul. Morska 15, 80-001 Gdańsk</span>
+          </li>
+          <li>
+            <i class="bi bi-telephone-fill" aria-hidden="true"></i>
+            <span>+48 123 456 789</span>
+          </li>
+          <li>
+            <i class="bi bi-envelope-fill" aria-hidden="true"></i>
+            <a href="mailto:kontakt@hotel-lux.pl">kontakt&#64;hotel-lux.pl</a>
+          </li>
+          <li>
+            <i class="bi bi-clock-fill" aria-hidden="true"></i>
+            <span>Recepcja: 24h / 7 dni</span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="col-lg-3 col-md-6">
+        <h2 class="lux-footer-heading text-white mb-4">Newsletter</h2>
+        <p class="lux-footer-text mb-3">
+          Otrzymuj informacje o ofertach specjalnych, nowych apartamentach i sezonowych pakietach pobytowych.
+        </p>
+        <form class="lux-newsletter" (ngSubmit)="submitNewsletter()" #newsletterForm="ngForm">
+          <label for="footerNewsletterEmail" class="visually-hidden">Adres e-mail</label>
+          <div class="input-group">
+            <input
+              id="footerNewsletterEmail"
+              type="email"
+              name="newsletterEmail"
+              class="form-control"
+              placeholder="Twój e-mail"
+              [(ngModel)]="newsletterEmail"
+              email
+              required
+              [disabled]="isNewsletterSending">
+            <button type="submit" class="btn btn-info fw-bold px-4" [disabled]="newsletterForm.invalid || isNewsletterSending">
+              @if (isNewsletterSending) {
+                <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                Zapisuję...
+              } @else {
+                Zapisz się
+              }
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="lux-footer-bottom mt-5 pt-4 d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+      <p class="mb-0 small">© 2026 Hotel Lux. Wszelkie prawa zastrzeżone.</p>
+      <div class="d-flex gap-4 small">
+        <a routerLink="/regulamin" class="lux-footer-bottom-link">Regulamin</a>
+        <a routerLink="/polityka-prywatnosci" class="lux-footer-bottom-link">Polityka Prywatności</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<app-cookie-banner></app-cookie-banner>

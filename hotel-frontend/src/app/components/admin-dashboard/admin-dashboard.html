@@ -1,0 +1,332 @@
+@if (isLoading) {
+  <div class="page-loader-overlay" role="status" aria-live="polite" aria-label="Ładowanie panelu administratora">
+    <div class="page-loader-content">
+      <div class="spinner-border text-info" aria-hidden="true"></div>
+      <span>Ładowanie panelu...</span>
+    </div>
+  </div>
+} @else if (isAuthorized) {
+  @if (roomsLoading || (activeTab === 'reservations' && bookingsLoading)) {
+    <div class="page-loader-overlay" role="status" aria-live="polite" aria-label="Ładowanie danych panelu">
+      <div class="page-loader-content">
+        <div class="spinner-border text-info" aria-hidden="true"></div>
+        <span>Ładowanie danych...</span>
+      </div>
+    </div>
+  }
+  <div class="admin-shell container mt-4">
+    <div class="admin-header card border-0 shadow-sm mb-4">
+      <div class="card-body">
+        <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3">
+          <div class="admin-title">
+            <h2 class="text-dark fw-bold mb-1">Panel Administratora</h2>
+            <p class="text-muted mb-0">Hotel Lux: pokoje, rezerwacje i statystyki</p>
+          </div>
+
+          <div class="admin-tabs btn-group shadow-sm">
+            <button type="button" class="btn" [class.btn-warning]="activeTab === 'rooms'" [class.btn-outline-secondary]="activeTab !== 'rooms'" (click)="setActiveTab('rooms')">
+              <i class="bi bi-door-open me-1"></i> Pokoje
+            </button>
+            <button type="button" class="btn" [class.btn-warning]="activeTab === 'reservations'" [class.btn-outline-secondary]="activeTab !== 'reservations'" (click)="setActiveTab('reservations')">
+              <i class="bi bi-calendar-check me-1"></i> Rezerwacje
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="admin-content">
+      @if (activeTab === 'rooms') {
+        <div class="admin-panel">
+          <div class="card border-0 shadow-sm mb-4">
+            <div class="card-body p-4">
+              <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-4">
+                <div>
+                  <h4 class="fw-bold mb-1">Przychody z rezerwacji</h4>
+                  <p class="text-muted mb-0">Słupki są przypisane do miesiąca rozpoczęcia rezerwacji</p>
+                </div>
+                <div class="d-flex flex-column flex-sm-row align-items-sm-end gap-3">
+                  <div>
+                    <label class="form-label small fw-bold text-muted mb-1">Rok</label>
+                    <select class="form-select" [ngModel]="selectedStatsYear" (ngModelChange)="changeStatsYear($event)" [disabled]="statsLoading">
+                      @for (year of availableStatsYears; track year) {
+                        <option [value]="year">{{ year }}</option>
+                      }
+                    </select>
+                  </div>
+                  <div class="text-sm-end">
+                    <span class="text-muted small d-block">Łącznie</span>
+                    <span class="fs-3 fw-bold text-success">{{ monthlyRevenueTotal }} PLN</span>
+                    <span class="text-muted small d-block">{{ monthlyBookingsTotal }} rezerwacji</span>
+                  </div>
+                </div>
+              </div>
+
+              @if (statsLoading) {
+                <div class="text-center py-5">
+                  <div class="spinner-border text-primary" role="status"></div>
+                </div>
+              } @else if ((revenueChartData.labels?.length || 0) > 0) {
+                <div class="chart-frame">
+                  <canvas baseChart [data]="revenueChartData" [options]="revenueChartOptions" [type]="'bar'"></canvas>
+                </div>
+              } @else {
+                <div class="alert alert-info mb-0">Brak danych do wyświetlenia wykresu.</div>
+              }
+            </div>
+          </div>
+
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h4 class="fw-bold mb-0">Zarządzanie pokojami</h4>
+            <button class="btn btn-success shadow-sm" (click)="addRoom()" [disabled]="isRoomSaving || isRoomUpdating">
+              <i class="bi bi-plus-lg me-1"></i> Dodaj Nowy Pokój
+            </button>
+          </div>
+
+          <div class="card border-0 shadow-sm mb-4">
+            @if (roomsLoading) {
+              <div class="text-center py-5">
+                <div class="spinner-border text-primary" role="status"></div>
+              </div>
+            } @else {
+              <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                  <thead class="table-light">
+                    <tr>
+                      <th>Pokój</th>
+                      <th>Miejsca</th>
+                      <th>Cena</th>
+                      <th>Opis</th>
+                      <th class="text-center">Akcje</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for (room of rooms; track room.id) {
+                      <tr>
+                        <td><div class="fw-bold text-primary">{{ room.name || ('Pokój ' + room.room_number) }}</div><div class="text-muted small">Nr {{ room.room_number }}</div></td>
+                        <td>{{ room.capacity }} os.</td>
+                        <td>{{ room.price_per_night }} PLN / noc</td>
+                        <td class="text-muted small text-truncate" style="max-width: 250px;">{{ room.description }}</td>
+                        <td class="text-center">
+                          <button class="btn btn-sm btn-outline-primary me-2" (click)="editRoom(room)" [disabled]="deletingRoomId === room.id || isRoomSaving || isRoomUpdating">Edytuj</button>
+                          <button class="btn btn-sm btn-outline-danger" (click)="deleteRoom(room.id)" [disabled]="deletingRoomId === room.id || isRoomSaving || isRoomUpdating">
+                            @if (deletingRoomId === room.id) {
+                              <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+                              Przetwarzanie...
+                            } @else {
+                              Usuń
+                            }
+                          </button>
+                        </td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+            }
+          </div>
+
+          <div #roomFormSection class="card shadow-sm border-0 bg-light p-4 mb-5 room-form-section">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h4 class="fw-bold mb-0">{{ editingRoom ? 'Edytuj Pokój: ' + editingRoom.room_number : 'Dodaj Nowy Pokój' }}</h4>
+              @if (editingRoom) {
+                <button class="btn btn-close" (click)="cancelEdit()" [disabled]="isRoomUpdating"></button>
+              }
+            </div>
+
+            <div class="row g-4 align-items-start">
+              <div class="col-lg-7">
+                <form #roomEditorForm="ngForm" novalidate (submit)="editingRoom ? saveEditedRoom($event, roomEditorForm) : saveRoom($event, roomEditorForm)">
+                  @if (roomFormError) {
+                    <div class="alert alert-danger" role="alert">{{ roomFormError }}</div>
+                  }
+                  <div class="row g-3">
+                    <div class="col-12">
+                      <label for="roomName" class="form-label">Nazwa pokoju</label>
+                      <input id="roomName" type="text" class="form-control" name="name" [(ngModel)]="roomForm.name" #roomName="ngModel" required maxlength="255" [class.is-invalid]="(roomName.invalid && (roomName.touched || roomFormSubmitted)) || roomFieldErrors['name']" [attr.aria-invalid]="(roomName.invalid && (roomName.touched || roomFormSubmitted)) || !!roomFieldErrors['name']" (input)="clearRoomFieldError('name')" [disabled]="isRoomSaving || isRoomUpdating">
+                      @if ((roomName.invalid && (roomName.touched || roomFormSubmitted)) || roomFieldErrors['name']) {
+                        <div class="invalid-feedback">{{ roomFieldErrors['name'] || 'Nazwa pokoju jest wymagana.' }}</div>
+                      }
+                    </div>
+                    <div class="col-md-3">
+                      <label class="form-label">Nr pokoju</label>
+                      <input type="text" class="form-control" name="room_number" [(ngModel)]="roomForm.room_number" #roomNumber="ngModel" required [class.is-invalid]="(roomNumber.invalid && (roomNumber.touched || roomFormSubmitted)) || roomFieldErrors['room_number']" (input)="clearRoomFieldError('room_number')" [disabled]="isRoomSaving || isRoomUpdating">
+                      @if ((roomNumber.invalid && (roomNumber.touched || roomFormSubmitted)) || roomFieldErrors['room_number']) { <div class="invalid-feedback">{{ roomFieldErrors['room_number'] || 'To pole jest wymagane.' }}</div> }
+                    </div>
+                    <div class="col-md-3">
+                      <label class="form-label">Miejsca</label>
+                      <input type="number" class="form-control" name="capacity" [(ngModel)]="roomForm.capacity" #capacity="ngModel" required min="1" [class.is-invalid]="(capacity.invalid && (capacity.touched || roomFormSubmitted)) || roomFieldErrors['capacity']" (input)="clearRoomFieldError('capacity')" [disabled]="isRoomSaving || isRoomUpdating">
+                      @if ((capacity.invalid && (capacity.touched || roomFormSubmitted)) || roomFieldErrors['capacity']) { <div class="invalid-feedback">{{ roomFieldErrors['capacity'] || 'Podaj liczbę miejsc większą od zera.' }}</div> }
+                    </div>
+                    <div class="col-md-4">
+                      <label class="form-label">Cena (PLN)</label>
+                      <input type="number" class="form-control" name="price_per_night" [(ngModel)]="roomForm.price_per_night" #price="ngModel" required min="0" step="0.01" [class.is-invalid]="(price.invalid && (price.touched || roomFormSubmitted)) || roomFieldErrors['price_per_night']" (input)="clearRoomFieldError('price_per_night')" [disabled]="isRoomSaving || isRoomUpdating">
+                      @if ((price.invalid && (price.touched || roomFormSubmitted)) || roomFieldErrors['price_per_night']) { <div class="invalid-feedback">{{ roomFieldErrors['price_per_night'] || 'Podaj poprawną cenę.' }}</div> }
+                    </div>
+                    <div class="col-12">
+                      <label class="form-label">Opis</label>
+                      <textarea class="form-control" name="description" rows="4" [(ngModel)]="roomForm.description" #description="ngModel" required [class.is-invalid]="(description.invalid && (description.touched || roomFormSubmitted)) || roomFieldErrors['description']" (input)="clearRoomFieldError('description')" [disabled]="isRoomSaving || isRoomUpdating"></textarea>
+                      @if ((description.invalid && (description.touched || roomFormSubmitted)) || roomFieldErrors['description']) { <div class="invalid-feedback">{{ roomFieldErrors['description'] || 'To pole jest wymagane.' }}</div> }
+                    </div>
+                    <div class="col-12">
+                      <label class="form-label">{{ editingRoom ? 'Zmień zdjęcie (opcjonalnie)' : 'Zdjęcie główne (opcjonalnie)' }}</label>
+                      <input type="file" class="form-control" name="main_image" accept="image/*" (change)="onRoomImageSelected($event)" [class.is-invalid]="roomFieldErrors['main_image']" [disabled]="isRoomSaving || isRoomUpdating">
+                      @if (roomFieldErrors['main_image']) { <div class="invalid-feedback">{{ roomFieldErrors['main_image'] }}</div> }
+                      @if (editingRoom) {
+                        <small class="text-muted">Pozostaw puste, aby zachować obecne zdjęcie.</small>
+                      }
+                    </div>
+                    <div class="col-12 text-end mt-4">
+                      @if (editingRoom) {
+                        <button type="button" class="btn btn-secondary px-4 me-2" (click)="cancelEdit()" [disabled]="isRoomUpdating">Anuluj</button>
+                      }
+                      <button type="submit" class="btn px-5 fw-bold" [class.btn-warning]="editingRoom" [class.btn-primary]="!editingRoom" [disabled]="isRoomSaving || isRoomUpdating">
+                        @if (isRoomSaving || isRoomUpdating) {
+                          <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                          Przetwarzanie...
+                        } @else if (editingRoom) {
+                          Zaktualizuj Pokój
+                        } @else {
+                          Zapisz Pokój w Bazie
+                        }
+                      </button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+
+              <div class="col-lg-5">
+                <div class="preview-sticky">
+                  <div class="card h-100 shadow-sm border-0 transition-hover">
+                    <img [src]="getRoomImageUrl(roomForm)" class="card-img-top preview-image" alt="Podgląd pokoju">
+                    <div class="card-body text-center">
+                      <h5 class="card-title text-primary fw-bold">{{ previewRoom.name }}</h5>
+                      <p class="text-muted small mb-2">Pokój {{ previewRoom.room_number }}</p>
+                      <p class="badge bg-info text-dark">Miejsca: {{ previewRoom.capacity }}</p>
+                      <p class="card-text text-muted small">{{ previewRoom.description }}</p>
+                      <h4 class="fw-bold my-3 text-dark">{{ previewRoom.price_per_night }} PLN <span class="fs-6 fw-normal text-muted">/ noc</span></h4>
+                      <button type="button" class="btn btn-primary w-100 shadow-sm fw-bold" (click)="openRoomPreview()">ZOBACZ SZCZEGÓŁY</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      } @else {
+        <div class="admin-panel">
+          <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-4">
+            <div>
+              <h4 class="fw-bold mb-1">Zarządzanie rezerwacjami</h4>
+              <p class="text-muted mb-0">Lista wszystkich rezerwacji w Hotel Lux</p>
+            </div>
+          </div>
+
+          <div class="card border-0 shadow-sm mb-4">
+            <div class="card-body">
+              <div class="row align-items-end g-3">
+                <div class="col-md-6 col-lg-4">
+                  <label class="form-label fw-bold">Filtruj po nazwisku</label>
+                  <input type="text" class="form-control" placeholder="np. Kowalski" [(ngModel)]="filteredLastName">
+                </div>
+                <div class="col-md-6 col-lg-8 text-md-end">
+                  <span class="badge text-bg-light border px-3 py-2">Wyniki: {{ filteredBookings.length }} / {{ bookings.length }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          @if (bookingsLoading) {
+            <div class="text-center py-5">
+              <div class="spinner-border text-primary" role="status"></div>
+            </div>
+          } @else if (filteredBookings.length > 0) {
+          <div class="card border-0 shadow-sm">
+              <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                  <thead class="table-light">
+                    <tr>
+                      <th>Gość</th>
+                      <th>Pokój</th>
+                      <th>Daty</th>
+                      <th>Cena</th>
+                      <th>Status</th>
+                      <th class="text-end">Zmiana statusu</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for (booking of filteredBookings; track booking.id) {
+                      <tr>
+                        <td>
+                          <div class="fw-bold">{{ booking.customer_name }}</div>
+                          <div class="text-muted small">{{ booking.user?.email || 'Brak e-maila' }}</div>
+                        </td>
+                        <td>
+                          <span class="fw-bold text-primary">{{ booking.room?.name || ('Pokój ' + (booking.room?.room_number || 'Brak danych')) }}</span>
+                          <div class="text-muted small">Nr {{ booking.room?.room_number || 'Brak danych' }}</div>
+                          <div class="text-muted small">{{ booking.room?.capacity || '-' }} os.</div>
+                        </td>
+                        <td>
+                          <div>{{ booking.check_in }}</div>
+                          <div class="text-muted small">do {{ booking.check_out }}</div>
+                        </td>
+                        <td class="fw-bold text-success">{{ booking.total_price }} PLN</td>
+                        <td>
+                          <span class="badge" [ngClass]="getStatusClass(booking.status)">{{ getStatusLabel(booking.status) }}</span>
+                        </td>
+                        <td class="text-end">
+                          <div class="d-inline-flex align-items-center gap-2">
+                            @if (updatingBookingId === booking.id) {
+                              <span class="spinner-border spinner-border-sm text-primary" role="status"></span>
+                            }
+                            <select class="form-select form-select-sm status-select" [ngModel]="booking.status" (ngModelChange)="updateStatus(booking, $event)" [disabled]="updatingBookingId === booking.id">
+                              <option value="active">Aktywna</option>
+                              <option value="confirmed">Potwierdzona</option>
+                              <option value="cancelled">Anulowana</option>
+                            </select>
+                          </div>
+                        </td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          } @else {
+            <div class="alert alert-info shadow-sm">Brak rezerwacji pasujących do filtra.</div>
+          }
+        </div>
+      }
+    </div>
+  </div>
+}
+
+@if (isRoomPreviewOpen) {
+  <div class="modal fade show d-block admin-room-preview-modal" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="adminRoomPreviewTitle">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content border-0 rounded-4 shadow-lg overflow-hidden">
+        <div class="modal-header border-0 pb-0">
+          <div>
+            <span class="badge text-bg-info mb-2">Podgląd bieżących danych formularza</span>
+            <h3 id="adminRoomPreviewTitle" class="modal-title fw-bold mb-0">{{ previewRoom.name }}</h3>
+            <p class="text-muted mb-0">Pokój nr {{ previewRoom.room_number }}</p>
+          </div>
+          <button type="button" class="btn-close" aria-label="Zamknij" (click)="closeRoomPreview()"></button>
+        </div>
+        <div class="modal-body">
+          <img [src]="getRoomImageUrl(previewRoom)" [alt]="previewRoom.name" class="admin-room-preview-image w-100 shadow-sm mb-4">
+          <div class="row g-3 mb-4">
+            <div class="col-sm-6"><div class="room-preview-stat"><span class="text-muted small d-block">Liczba miejsc</span><strong>{{ previewRoom.capacity }} os.</strong></div></div>
+            <div class="col-sm-6"><div class="room-preview-stat"><span class="text-muted small d-block">Cena za noc</span><strong>{{ previewRoom.price_per_night }} PLN</strong></div></div>
+          </div>
+          <h5 class="fw-bold mb-2">Opis</h5>
+          <p class="mb-0">{{ previewRoom.description }}</p>
+        </div>
+        <div class="modal-footer border-0 pt-0">
+          <button type="button" class="btn btn-secondary px-4" (click)="closeRoomPreview()">Zamknij</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-backdrop fade show admin-room-preview-backdrop" (click)="closeRoomPreview()"></div>
+}

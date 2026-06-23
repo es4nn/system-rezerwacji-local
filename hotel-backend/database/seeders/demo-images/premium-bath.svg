@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" role="img" aria-label="Apartament Premium z wanna">
+  <rect width="1200" height="800" fill="#f1ece8"/>
+  <rect x="95" y="110" width="1010" height="570" rx="28" fill="#fffaf5"/>
+  <rect x="155" y="350" width="470" height="160" rx="24" fill="#4c4038"/>
+  <rect x="185" y="285" width="410" height="95" rx="18" fill="#d8c1aa"/>
+  <ellipse cx="830" cy="455" rx="175" ry="82" fill="#efe1d2"/>
+  <ellipse cx="830" cy="430" rx="135" ry="48" fill="#ffffff"/>
+  <rect x="805" y="250" width="34" height="185" rx="17" fill="#b89265"/>
+  <text x="155" y="635" fill="#362f2b" font-family="Arial, sans-serif" font-size="50" font-weight="700">Apartament Premium</text>
+</svg>
