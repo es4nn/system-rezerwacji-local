@@ -11,7 +11,7 @@ Projekt jest przygotowany jako wersja repozytoryjna do uruchomienia lokalnego.
 ## Szybki start
 
 ```bash
-git clone ADRES_REPOZYTORIUM
+git clone https://github.com/es4nn/system-rezerwacji-local/
 cd system-rezerwacji
 cd hotel-backend
 composer install
