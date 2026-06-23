@@ -227,3 +227,4 @@ Administrator po zalogowaniu moze wejsc do panelu admina, zarzadzac pokojami, wg
 - `docs/BAZA_DANYCH.md`
 - `docs/ENDPOINTY_API.md`
 - `docs/URUCHOMIENIE_LOKALNE.md`
+- `docs/WERSJA_PRODUKCYJNA.md`
