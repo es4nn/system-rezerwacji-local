@@ -9,6 +9,7 @@ Aplikacja internetowa wspierajaca obsluge rezerwacji hotelowych. Projekt sklada 
 CREATE DATABASE hotel_lux CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 ```
 Projekt jest przygotowany jako wersja repozytoryjna do uruchomienia lokalnego.
+Szczegółowa dokumentacja projektu znajduje się w folderze `docs`
 
 ## Szybki start
 
