@@ -5,7 +5,6 @@ Projekt uzywa MySQL. Domyslna lokalna baza w `.env.example` to `hotel_lux`.
 ## Tabele systemowe Laravel
 
 - `users` - konta uzytkownikow i administratorow.
-- `password_reset_tokens` - tokeny resetowania hasla.
 - `sessions` - sesje, jezeli aplikacja uzywa sterownika bazodanowego.
 - `cache`, `cache_locks` - cache Laravela.
 - `jobs`, `job_batches`, `failed_jobs` - kolejki.
